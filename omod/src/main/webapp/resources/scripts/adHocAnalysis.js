@@ -128,7 +128,21 @@ var app = angular.module('adHocAnalysis', ['ui.bootstrap']).
             _.each($scope.dataExport.parameters, function(item) {
                 if (item.type == "java.util.Date") {
                     item.value = moment().startOf('day').toDate();
+                    item.typeDescription="reportingui.adHocReport.type.dateDescription";
                 }
+                if (item.type == "org.openmrs.EncounterType") {
+                    item.typeDescription="reportingui.adHocReport.type.encounterDescription";
+                }
+
+                if (item.type == "org.openmrs.VisitType") {
+                    item.typeDescription="reportingui.adHocReport.type.visitDescription";
+                }
+
+                if (item.type == "org.openmrs.Location") {
+                    item.typeDescription="reportingui.adHocReport.type.locationDescription";
+                }
+
+
             });
         }
         else {
@@ -137,6 +151,7 @@ var app = angular.module('adHocAnalysis', ['ui.bootstrap']).
                     name: "startDate",
                     label: "reportingui.adHocReport.timeframe.startDateLabel",
                     type: "java.util.Date",
+                    typeDescription:"reportingui.adHocReport.type.dateDescription",
                     collectionType: null,
                     value: moment().startOf('day').toDate()
                 },
@@ -144,6 +159,7 @@ var app = angular.module('adHocAnalysis', ['ui.bootstrap']).
                     name: "endDate",
                     label: "reportingui.adHocReport.timeframe.endDateLabel",
                     type: "java.util.Date",
+                    typeDescription:"reportingui.adHocReport.type.dateDescription",
                     collectionType: null,
                     value: moment().startOf('day').toDate()
                 }

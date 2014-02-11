@@ -13,7 +13,11 @@
 
 <%= ui.includeFragment("appui", "messages", [ codes: [
         "reportingui.adHocReport.timeframe.startDateLabel",
-        "reportingui.adHocReport.timeframe.endDateLabel"
+        "reportingui.adHocReport.timeframe.endDateLabel",
+        "reportingui.adHocReport.type.dateDescription",
+        "reportingui.adHocReport.type.encounterDescription",
+        "reportingui.adHocReport.type.visitDescription",
+        "reportingui.adHocReport.type.locationDescription"
 ].flatten()
 ]) %>
 
@@ -71,7 +75,7 @@
                     {{ \$index + 1 }}.
                     {{ parameter.label | translate }}:
                     <span ng-show="parameter.collectionType">{{ parameter.collectionType }} of </span>
-                    {{ parameter.type }}
+                    {{ parameter.typeDescription | translate }}
                 </li>
             </ul>
         </div>
