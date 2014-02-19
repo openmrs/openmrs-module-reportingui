@@ -120,6 +120,12 @@ var app = angular.module('adHocAnalysis', ['ui.bootstrap']).
 
         $scope.dataExport.columns = [];
 
+        $scope.dataExport.smth = [];
+
+        $scope.resultsNumber = [];
+
+
+
         if (initialSetup) {
             $scope.dataExport.uuid = initialSetup.uuid;
             $scope.dataExport.name = initialSetup.name;
@@ -191,11 +197,14 @@ var app = angular.module('adHocAnalysis', ['ui.bootstrap']).
                 $scope.dataExport.rowFilters.push(definition);
                 setDirty();
             }
+            $scope.searches($scope.dataExport.rowFilters.length-1);
         }
 
         $scope.removeRow = function(idx) {
             $scope.dataExport.rowFilters.splice(idx, 1);
             setDirty();
+            $scope.actualizeResultsNumber(idx);
+            $scope.preview();
         }
 
         $scope.addColumn = function(definition) {
@@ -294,6 +303,10 @@ var app = angular.module('adHocAnalysis', ['ui.bootstrap']).
                 $scope.preview();
             }
 
+            if(stepName == 'searches') {
+                $scope.searches($scope.dataExport.rowFilters.length-1);
+            }
+
             for(var i=0; i < steps.length; i++) {
                 if(!isAfterCurrentStep) {
                     if(steps[i] == stepName) {
@@ -362,6 +375,7 @@ var app = angular.module('adHocAnalysis', ['ui.bootstrap']).
             }
         }
 
+
         $scope.preview = function() {
             $scope.results = { loading: true };
 
@@ -379,6 +393,40 @@ var app = angular.module('adHocAnalysis', ['ui.bootstrap']).
                 success(function(data, status, headers, config) {
                     $scope.results = data;
                 });
+
+        }
+
+        $scope.actualizeResultsNumber=function(rowIndex){
+            for(var i=rowIndex;i<$scope.resultsNumber.length-1;i++){
+                $scope.resultsNumber[i]=$scope.resultsNumber[i+1]
+
+            }
+
+        }
+
+        $scope.searches = function(rowIndex) {
+            $scope.results = { loading: true };
+
+            var parameterValues = {};
+            _.each($scope.dataExport.parameters, function(item) {
+                parameterValues[item.name] = item.value;
+            });
+
+            post(emr.fragmentActionLink('reportingui', 'adHocAnalysis', 'searches'),
+                {
+                    rowQueries: angular.toJson($scope.dataExport.rowFilters),
+                    columns: angular.toJson($scope.dataExport.columns),
+                    parameterValues: angular.toJson(parameterValues),
+                    rowIndex: rowIndex
+                }).
+
+                success(function(data, status, headers, config) {
+                    $scope.results = data;
+                    $scope.resultsNumber[rowIndex]= $scope.results.singleRow;
+
+                   // $scope.DataExport.smth[0]=$scope.results.sing;
+                });
+
         }
 
         $scope.canSave = function() {

@@ -100,14 +100,27 @@
             </ul>
             <i class="icon-chevron-right"></i>
             <ul>
-                <div ng-show="dataExport.rowFilters.length > 0" class="ul-header selected">${ ui.message("reportingui.adHocReport.searchCriteria.combination") }</div>
+                <div ng-show="dataExport.rowFilters.length > 0" class="ul-header selected">${ ui.message("reportingui.adHocReport.searchCriteria.combination") }
+                    <span class="step" ng-show="results.loading">
+                    (<img class="spinner" src="${ ui.resourceLink("uicommons", "images/spinner.gif") }" width="32" height="32"  />
+                    ${ ui.message("reportingui.adHocReport.searchCriteria.calculating") })
+                </span>
+                    <span ng-show="results.allRows.length>=0">({{results.allRows.length}} results)</span>
+                </div>
                 <li class="item" ng-repeat="rowQuery in dataExport.rowFilters">
                     <label>{{ \$index + 1 }}.</label>
                     <span class="definition-name">
                         {{ rowQuery.name }}
                     </span>
+
+
                     <span class="actions">
                         <i ng-click="removeRow(\$index)"class="icon-remove small"></i>
+                        <span ng-show="\$last != true  ">{{ resultsNumber[\$index] }} results</span>
+                        <span ng-show="\$last==true">
+                            <img class="spinner" ng-show="results.loading" src="${ ui.resourceLink("uicommons", "images/spinner.gif") }" width="32" height="32"/>
+                            <span ng-show="results.loading!=true">{{ resultsNumber[\$index] }} results</span>
+                        </span>
                     </span>
                 </li>
             </ul>
@@ -116,7 +129,9 @@
         <div class="navigation">
             <button ng-click="back()">${ ui.message("reportingui.adHocReport.back") }</button>
             <button ng-click="next()">${ ui.message("reportingui.adHocReport.next") }</button>
+
         </div>
+
     </div>
 
     <div id="columns" class="step"  ng-show="currentView == 'columns'">

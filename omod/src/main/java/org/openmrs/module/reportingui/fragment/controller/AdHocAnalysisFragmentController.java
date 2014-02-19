@@ -43,6 +43,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -107,7 +108,7 @@ public class AdHocAnalysisFragmentController {
                 composition.addSearch("" + i, cohortDefinition, mappings);
             }
 
-            composition.setCompositionString(OpenmrsUtil.join(composition.getSearches().keySet(), " AND "));
+            composition.setCompositionString(OpenmrsUtil.join(composition.getSearches().keySet(), " OR "));
 
             composedRowQuery = composition;
         }
@@ -154,6 +155,133 @@ public class AdHocAnalysisFragmentController {
 
         return result;
     }
+
+	public Result searches(@RequestParam("rowQueries") String rowQueriesJson,
+	                      @RequestParam("columns") String columnsJson,
+	                      @RequestParam("parameterValues") String parameterValuesJson,
+	                      @RequestParam("rowIndex") int rowIndex,
+	                      UiUtils ui,
+	                      @SpringBean AllDefinitionLibraries definitionLibraries,
+	                      @SpringBean CohortDefinitionService cohortDefinitionService,
+	                      @SpringBean DataSetDefinitionService dataSetDefinitionService) throws Exception {
+
+		ObjectMapper jackson = new ObjectMapper();
+		ArrayNode rowQueries = jackson.readValue(rowQueriesJson, ArrayNode.class);
+		ArrayNode columns = jackson.readValue(columnsJson, ArrayNode.class);
+
+		Map<String, Object> paramValues = parseParameterValues(jackson, parameterValuesJson);
+
+		Result result = new Result();
+
+		CohortDefinition composedRowQuery = null;
+		CohortDefinition singleComposedRowQuery=null;
+		if (rowQueries.size() > 0) {
+			CompositionCohortDefinition composition = new CompositionCohortDefinition();
+			//int i = 0;
+			//for (JsonNode rowQuery : rowQueries) {
+				// {
+				//   "type":"org.openmrs.module.reporting.cohort.definition.GenderCohortDefinition",
+				//   "key":"reporting.library.cohortDefinition.builtIn.males",
+				//   "name":"Male patients",
+				//   "description":"Patients whose gender is M",
+				//   "parameters":[]
+				// }
+				//i += 1;
+				JsonNode rowQuery=rowQueries.get(rowIndex);
+				DefinitionLibraryCohortDefinition cohortDefinition = new DefinitionLibraryCohortDefinition(rowQuery.get("key").getTextValue());
+				cohortDefinition.loadParameters(definitionLibraries);
+
+				Map<String, Object> mappings = Mapped.straightThroughMappings(cohortDefinition);
+				composition.addSearch("" + 1, cohortDefinition, mappings);
+			//}
+
+
+			composition.setCompositionString(OpenmrsUtil.join(composition.getSearches().keySet(), " AND "));
+
+			singleComposedRowQuery=composition;
+			EvaluatedCohort cohort = cohortDefinitionService.evaluate(singleComposedRowQuery, new EvaluationContext());
+			result.writeSingleRow(cohort.getMemberIds().size());
+
+		}
+		else {
+			composedRowQuery = new AllPatientsCohortDefinition();
+		}
+
+
+
+
+
+		if (rowQueries.size() > 0) {
+			CompositionCohortDefinition composition = new CompositionCohortDefinition();
+			int i = 0;
+			for (JsonNode rowQuery : rowQueries) {
+				// {
+				//   "type":"org.openmrs.module.reporting.cohort.definition.GenderCohortDefinition",
+				//   "key":"reporting.library.cohortDefinition.builtIn.males",
+				//   "name":"Male patients",
+				//   "description":"Patients whose gender is M",
+				//   "parameters":[]
+				// }
+				i += 1;
+				DefinitionLibraryCohortDefinition cohortDefinition = new DefinitionLibraryCohortDefinition(rowQuery.get("key").getTextValue());
+				cohortDefinition.loadParameters(definitionLibraries);
+
+				Map<String, Object> mappings = Mapped.straightThroughMappings(cohortDefinition);
+				composition.addSearch("" + i, cohortDefinition, mappings);
+			}
+
+			composition.setCompositionString(OpenmrsUtil.join(composition.getSearches().keySet(), " AND "));
+
+			composedRowQuery = composition;
+		}
+		else {
+			composedRowQuery = new AllPatientsCohortDefinition();
+		}
+
+
+
+		EvaluatedCohort cohort = cohortDefinitionService.evaluate(composedRowQuery, new EvaluationContext());
+		result.setAllRows(cohort.getMemberIds());
+
+
+
+		// for preview purposes, just get a small number of rows
+		Cohort previewCohort = new Cohort();
+		int j = 0;
+		for (Integer member : cohort.getMemberIds()) {
+			j += 1;
+			previewCohort.addMember(member);
+			if (j >= 10) {
+				break;
+			}
+		}
+
+		PatientDataSetDefinition dsd = new PatientDataSetDefinition();
+		for (JsonNode column : columns) {
+			// {
+			//   "type":"org.openmrs.module.reporting.data.patient.definition.PatientIdDataDefinition",
+			//   "key":"reporting.patientDataCalculation.patientId",
+			//   "name":"reporting.patientDataCalculation.patientId.name",
+			//   "description":"reporting.patientDataCalculation.patientId.description",
+			//   "parameters":[]
+			// }
+
+			DefinitionLibraryPatientDataDefinition definition = new DefinitionLibraryPatientDataDefinition(column.get("key").getTextValue());
+			definition.loadParameters(definitionLibraries);
+			dsd.addColumn(column.get("name").getTextValue(), definition, Mapped.straightThroughMappings(definition));
+		}
+
+		EvaluationContext previewEvaluationContext = new EvaluationContext();
+		previewEvaluationContext.setBaseCohort(previewCohort);
+		previewEvaluationContext.setParameterValues(paramValues);
+
+		DataSet data = dataSetDefinitionService.evaluate(dsd, previewEvaluationContext);
+		result.setColumnNames(getColumnNames(data));
+		result.setData(transform(data, ui));
+
+		return result;
+	}
+
 
     public SimpleObject runAdHocExport(@RequestParam("dataset") List<String> dsdUuids,
                                        @RequestParam("outputFormat") String outputFormat,
@@ -242,11 +370,19 @@ public class AdHocAnalysisFragmentController {
 
         private Set<Integer> allRows;
 
+
+	    public int singleRow;
+
         private List<String> columnNames;
 
         private List<List<String>> data;
 
         public Result() { }
+
+
+	    public void writeSingleRow(int singleRow){
+		    this.singleRow=singleRow;
+	    }
 
         public Set<Integer> getAllRows() {
             return allRows;
