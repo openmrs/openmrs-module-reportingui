@@ -1,5 +1,6 @@
 package org.openmrs.module.reportingui.fragment.controller;
 
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
@@ -74,6 +75,7 @@ public class AdHocAnalysisFragmentController {
     public Result preview(@RequestParam("rowQueries") String rowQueriesJson,
                           @RequestParam("columns") String columnsJson,
                           @RequestParam("parameterValues") String parameterValuesJson,
+                          @RequestParam("customCombination") String customCombination,
                           UiUtils ui,
                           @SpringBean AllDefinitionLibraries definitionLibraries,
                           @SpringBean CohortDefinitionService cohortDefinitionService,
@@ -107,7 +109,11 @@ public class AdHocAnalysisFragmentController {
                 composition.addSearch("" + i, cohortDefinition, mappings);
             }
 
-            composition.setCompositionString(OpenmrsUtil.join(composition.getSearches().keySet(), " AND "));
+            if (StringUtils.isNotBlank(customCombination)) {
+                composition.setCompositionString(customCombination);
+            } else {
+                composition.setCompositionString(OpenmrsUtil.join(composition.getSearches().keySet(), " AND "));
+            }
 
             composedRowQuery = composition;
         }

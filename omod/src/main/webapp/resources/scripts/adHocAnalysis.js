@@ -114,6 +114,10 @@ var app = angular.module('adHocAnalysis', ['ui.bootstrap']).
 
         $scope.dirty = !window.adHocDataExport.uuid;
 
+        $scope.editingCombination = false;
+
+        $scope.dataExport.customRowFilterCombination = '';
+
         $scope.dataExport.parameters = [];
 
         $scope.dataExport.rowFilters = [];
@@ -220,6 +224,19 @@ var app = angular.module('adHocAnalysis', ['ui.bootstrap']).
             setDirty();
         }
 
+        $scope.editCombination = function() {
+            $scope.editingCombination = true;
+        }
+
+        $scope.applyEditCombination = function() {
+            $scope.dataExport.customRowFilterCombination = $('#custom-combination').val();
+            $scope.editingCombination = false;
+        }
+
+        $scope.cancelEditCombination = function() {
+            $('#custom-combination').val($scope.dataExport.customRowFilterCombination);
+            $scope.editingCombination = false;
+        }
 
         // ----- View and ViewModel ----------
 

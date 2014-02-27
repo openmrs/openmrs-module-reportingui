@@ -14,19 +14,23 @@
 
 package org.openmrs.module.reportingui.adhoc;
 
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
+import org.openmrs.module.reporting.cohort.definition.DefinitionLibraryCohortDefinition;
 import org.openmrs.module.reporting.dataset.column.definition.RowPerObjectColumnDefinition;
 import org.openmrs.module.reporting.dataset.definition.PatientDataSetDefinition;
 import org.openmrs.module.reporting.dataset.definition.RowPerObjectDataSetDefinition;
 import org.openmrs.module.reporting.definition.library.AllDefinitionLibraries;
 import org.openmrs.module.reporting.evaluation.parameter.Mapped;
 import org.openmrs.module.reporting.evaluation.parameter.Parameter;
-import org.openmrs.module.reporting.query.Query;
+import org.openmrs.module.reporting.cohort.definition.CompositionCohortDefinition;
+import org.openmrs.util.OpenmrsUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class AdHocDataSet {
 
@@ -41,6 +45,9 @@ public class AdHocDataSet {
 
     @JsonProperty
     private String type;
+
+    @JsonProperty
+    private String customRowFilterCombination;
 
     @JsonProperty
     private List<AdHocParameter> parameters;
@@ -70,8 +77,19 @@ public class AdHocDataSet {
         }
         if (definition instanceof PatientDataSetDefinition) {
             PatientDataSetDefinition dsd = (PatientDataSetDefinition) definition;
-            for (Mapped<? extends CohortDefinition> query : dsd.getRowFilters()) {
-                addRowFilter(new AdHocRowFilter(query));
+            List<Mapped<? extends CohortDefinition>> filters = dsd.getRowFilters();
+            if(filters.size() == 1 && filters.get(0).getParameterizable() instanceof CompositionCohortDefinition) {
+                CompositionCohortDefinition ccd = (CompositionCohortDefinition) filters.get(0).getParameterizable();
+                //get each individual row filter out, as well as the customRowFilterCombination
+                Map<String, Mapped<CohortDefinition>> searches = ccd.getSearches();
+                customRowFilterCombination = ccd.getCompositionString();
+                for(java.util.Map.Entry<String, Mapped<CohortDefinition>>  cd : searches.entrySet()) {
+                    addRowFilter(new AdHocRowFilter(cd.getValue()));
+                }
+            } else {
+                for (Mapped<? extends CohortDefinition> query : dsd.getRowFilters()) {
+                    addRowFilter(new AdHocRowFilter(query));
+                }
             }
         }
         else {
@@ -96,7 +114,6 @@ public class AdHocDataSet {
         else {
             dsd = (RowPerObjectDataSetDefinition) Context.loadClass(type).newInstance();
         }
-
         dsd.setName(name);
         dsd.setDescription(description);
         if (parameters != null) {
@@ -110,11 +127,22 @@ public class AdHocDataSet {
             }
         }
         if (rowFilters != null) {
-            for (AdHocRowFilter filter : rowFilters) {
-                Query query = filter.toQuery(dsd.getClass(), definitionLibraries);
-                if (dsd instanceof PatientDataSetDefinition) {
-                    ((PatientDataSetDefinition) dsd).addRowFilter(Mapped.mapStraightThrough((CohortDefinition) query));
+            if (dsd instanceof PatientDataSetDefinition) {
+                CompositionCohortDefinition composition = new CompositionCohortDefinition();
+                int i = 0;
+                for (AdHocRowFilter filter : rowFilters) {
+                    i += 1;
+                    DefinitionLibraryCohortDefinition cohortDefinition = new DefinitionLibraryCohortDefinition(filter.getKey());
+                    cohortDefinition.loadParameters(definitionLibraries);
+                    Map<String, Object> mappings = Mapped.straightThroughMappings(cohortDefinition);
+                    composition.addSearch("" + i, cohortDefinition, mappings);
+                    if (StringUtils.isNotBlank(customRowFilterCombination)) {
+                        composition.setCompositionString(customRowFilterCombination);
+                    } else {
+                        composition.setCompositionString(OpenmrsUtil.join(composition.getSearches().keySet(), " AND "));
+                    }
                 }
+                ((PatientDataSetDefinition) dsd).addRowFilter(Mapped.mapStraightThrough((CohortDefinition) composition));
             }
         }
         return dsd;
@@ -164,6 +192,10 @@ public class AdHocDataSet {
     public void setUuid(String uuid) {
         this.uuid = uuid;
     }
+
+    public String getCustomRowFilterCombination() { return customRowFilterCombination; }
+
+    public void setCustomRowFilterCombination(String customRowFilterCombination) { this.customRowFilterCombination = customRowFilterCombination; }
 
     public String getType() {
         return type;

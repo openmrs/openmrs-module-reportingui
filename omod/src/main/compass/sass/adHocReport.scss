@@ -184,6 +184,10 @@
       color: lighten(#333, 50%);
     }
   }
+
+  #edit-button {
+    float: right;
+  }
 }
 
 #searches, #columns {

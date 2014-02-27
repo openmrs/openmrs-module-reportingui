@@ -100,7 +100,19 @@
             </ul>
             <i class="icon-chevron-right"></i>
             <ul>
-                <div ng-show="dataExport.rowFilters.length > 0" class="ul-header selected">${ ui.message("reportingui.adHocReport.searchCriteria.combination") }</div>
+                <div ng-show="dataExport.rowFilters.length > 0" class="ul-header selected" id="searches-header">
+                    <span ng-hide="editingCombination">
+                        <span ng-hide="dataExport.customRowFilterCombination">${ ui.message("reportingui.adHocReport.searchCriteria.combination") }</span>
+                        <span ng-show="dataExport.customRowFilterCombination">${ ui.message("reportingui.adHocReport.searchCriteria.customRowFilterCombination") }</span>
+                        <i ng-click="editCombination()" class="icon-edit small" id="edit-button"></i>
+                    </span>
+                    <span ng-show="editingCombination">
+                        ${ ui.message("reportingui.adHocReport.searchCriteria.combination.edit") }:
+                        <input type="text" id="custom-combination" placeholder="${ ui.message('reportingui.adHocReport.searchCriteria.combination.example') }"/>
+                        <button ng-click="cancelEditCombination()">Cancel</button>
+                        <button ng-click="applyEditCombination()">Apply</button>
+                    </span>
+                </div>
                 <li class="item" ng-repeat="rowQuery in dataExport.rowFilters">
                     <label>{{ \$index + 1 }}.</label>
                     <span class="definition-name">
