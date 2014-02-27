@@ -82,9 +82,9 @@ var app = angular.module('adHocAnalysis', ['ui.bootstrap']).
 
         function filterAvailable(allDefinitions, currentDefinitions) {
             return _.filter(allDefinitions, function(candidate) {
-                // skip items whose parameters are incompatible
-                if (!$scope.isAllowed(candidate)) {
-                    return false;
+                // do not skip when extra parameter is required
+                if ($scope.requiresExtraParameters(candidate)) {
+                    return true;
                 }
                 // skip anything we already have selected
                 // (when we start supporting parameterized things, this needs to change)
@@ -111,7 +111,6 @@ var app = angular.module('adHocAnalysis', ['ui.bootstrap']).
 
         var initialSetup = $scope.dataExport.initialSetup;
         delete $scope.dataExport.initialSetup;
-
         $scope.dirty = !window.adHocDataExport.uuid;
 
         $scope.dataExport.parameters = [];
@@ -188,9 +187,79 @@ var app = angular.module('adHocAnalysis', ['ui.bootstrap']).
 
         $scope.addRow = function(definition) {
             if(jq.inArray(definition, $scope.dataExport.rowFilters) < 0) {
-                $scope.dataExport.rowFilters.push(definition);
-                setDirty();
+                if($scope.requiresExtraParameters(definition) && !$scope.hasExtraParameters(definition)) {
+                    $scope.showModal($.extend(true, {}, definition));
+                } else {
+                    $scope.dataExport.rowFilters.push(definition);
+                    setDirty();
+                }
             }
+        }
+
+        $scope.addParam = function(definition) {
+            var params = definition.parameters;
+            for(i = 0; i < params.length; i++) {
+                if(params[i].collectionType == null) {
+                    params[i].value = $('[name="' + params[i].name + '"]').val();
+                } else {
+                    params[i].value = [];
+                    $('#modal-encounter-types').find("input:checkbox:checked").each(function () {
+                        if(this.checked) {
+                            params[i].value.push(this.name);
+                        }
+                    });
+                }
+            }
+            $scope.closeModal();
+            $scope.$apply(function () {
+                if($scope.currentView == 'columns') {
+                    $scope.dataExport.columns.push(definition);
+                }
+                else {
+                    $scope.dataExport.rowFilters.push(definition);
+                }
+            });
+        }
+
+        $scope.closeModal = function() {
+            $.modal.close();
+        }
+
+        $scope.showModal = function(definition) {
+            var definitionContent = '<p><span style=\"font-weight: bold\">' + definition.name +
+                '</span></p><p>' + definition.description + '</p>';
+            var paramsContent = '';
+            var params = definition.parameters;
+            for(i = 0; i < params.length; i++) {
+                if(!_.contains(_.pluck($scope.dataExport.parameters, 'name'), params[i].name)) {
+                    if(params[i].collectionType == null) {
+                        if (params[i].type == 'class java.util.Date') {
+                            paramsContent += '<p class=\"modal-inputs\">' + params[i].name + ': <input type=\"text\" class=\"params datepicker\" name=\"' + params[i].name + '\"></p>';
+                        } else {
+                            paramsContent += '<p class=\"modal-inputs\">' + params[i].name + ': <input type=\"text\" class=\"params\" name=\"' + params[i].name + '\"></p>';
+                        }
+                    }
+                    else {
+                       paramsContent += "<div id=\"modal-encounter-types\">" + $("#modal-encounter-types-wrap").html() + "</div>";
+                    }
+                }
+            }
+            $("#modal-definition").html(definitionContent);
+            $("#modal-params").html(paramsContent);
+            $(".datepicker").focus(function() {$(this).datepicker();});
+            $("#add-button").click(function() {$scope.addParam(definition)});
+            $("#modal-content").modal(
+                {
+                    containerCss: {
+                        backgroundColor: "#fff",
+                        width: 500,
+                        '-moz-box-shadow': '15px 15px 40px #000',
+                        '-webkit-box-shadow': '15px 15px 40px #000',
+                        'box-shadow': '15px 15px 40px #000'},
+                    closeClass: 'closeModal',
+                    persist: true
+                });
+            $("#simplemodal-container").css('height', 'auto');
         }
 
         $scope.removeRow = function(idx) {
@@ -199,9 +268,14 @@ var app = angular.module('adHocAnalysis', ['ui.bootstrap']).
         }
 
         $scope.addColumn = function(definition) {
-            if(jq.inArray(definition, $scope.columns) < 0) {
-                $scope.dataExport.columns.push(definition);
-                setDirty();
+            if(jq.inArray(definition, $scope.dataExport.columns) < 0) {
+                if($scope.requiresExtraParameters(definition)) {
+                    $scope.showModal(definition);
+                }
+                else {
+                    $scope.dataExport.columns.push(definition);
+                    setDirty();
+                }
             }
         }
 
@@ -271,11 +345,25 @@ var app = angular.module('adHocAnalysis', ['ui.bootstrap']).
             return filterAvailable(allPossible, $scope.dataExport.columns);
         }
 
-        $scope.isAllowed = function(definition) {
+        $scope.requiresExtraParameters = function(definition) {
             var allowedParameters = _.pluck($scope.dataExport.parameters, 'name');
             var paramNames = _.pluck(definition.parameters, 'name');
             var notAllowed = _.difference(paramNames, allowedParameters);
-            return notAllowed.length == 0;
+            return notAllowed.length != 0;
+        }
+
+        $scope.isParameterAllowed = function(param) {
+            var allowedParameters = _.pluck($scope.dataExport.parameters, 'name');
+            return _.contains(allowedParameters, param.name);
+        }
+
+        $scope.hasExtraParameters = function(definition) {
+            for(i = 0; i < definition.parameters.length; i++) {
+                if(!$scope.isParameterAllowed(definition.parameters[i]) && definition.parameters[i].value == null) {
+                    return false;
+                }
+            }
+            return true;
         }
 
         $scope.changeStep = function(stepName) {
@@ -413,4 +501,3 @@ var app = angular.module('adHocAnalysis', ['ui.bootstrap']).
             location.href = emr.pageLink('reportingui', 'adHocRun', data);
         }
     }]);
-

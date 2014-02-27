@@ -93,7 +93,7 @@
                 <div class="ul-header">
                     <input type="text" class="focus-first" id="row-search" placeholder="${ ui.message('reportingui.adHocReport.searchCriteria.filter.placeholder') }" ng-model="searchcriteria" />
                 </div>
-                <li ng-click="addRow(criteria)" ng-repeat="criteria in availableSearches() | filter:searchcriteria" ng-show="isAllowed(criteria)" class="option">
+                <li ng-click="addRow(criteria)" ng-repeat="criteria in availableSearches() | filter:searchcriteria" ng-show="true" class="option">
                     <span>{{ criteria.name }}</span>
                     <small class="definition-description">{{ criteria.description }}</small>
                 </li>
@@ -109,17 +109,42 @@
                     <span class="actions">
                         <i ng-click="removeRow(\$index)"class="icon-remove small"></i>
                     </span>
+                    <span class="definition-param" ng-repeat="param in rowQuery.parameters" ng-hide="isParameterAllowed(param)">
+                        {{ param.name }}: {{ param.value }}
+                    </span>
                 </li>
             </ul>
-            
+
         </div>
+
         <div class="navigation">
             <button ng-click="back()">${ ui.message("reportingui.adHocReport.back") }</button>
             <button ng-click="next()">${ ui.message("reportingui.adHocReport.next") }</button>
         </div>
     </div>
 
-    <div id="columns" class="step"  ng-show="currentView == 'columns'">
+    <div id="modal-content" ng-show="false">
+        <div class="modal-header">${ ui.message('reportingui.adHocReport.modal.header') }</div>
+        <div id="basic-modal-content">
+            <div id="modal-definition">
+            </div>
+            <div id="modal-params">
+            </div>
+            <div id="modal-buttons">
+                <p class="button-left closeModal"><button id="cancel-button">${ ui.message('reportingui.adHocReport.modal.cancel') }</button></p>
+                <p class="button-right"><button id="add-button">${ ui.message('reportingui.adHocReport.modal.add') }</button></p>
+            </div>
+            <div id="modal-encounter-types-wrap" ng-show="false">
+                <p>${ ui.message('reportingui.adHocReport.modal.encounterTypes')}</p>
+                <% def types = context.encounterService.allEncounterTypes %>
+                <% types.each { %>
+                    <p class="modal-inputs">${ it.name }: <input type="checkbox" class="params" name="${ it.name }"></p>
+                <% } %>
+            </div>
+        </div>
+    </div>
+
+<div id="columns" class="step"  ng-show="currentView == 'columns'">
         <h2>${ ui.message("reportingui.adHocReport.columns") }</h2>
         <span>${ ui.message("reportingui.adHocReport.columns.description") }</span>
 
@@ -128,7 +153,7 @@
                 <div class="ul-header">
                     <input type="text" class="focus-first" id="column-search" placeholder="${ ui.message('reportingui.adHocReport.columns.filter.placeholder') }" ng-model="columns" />
                 </div>
-                <li ng-click="addColumn(column)" ng-repeat="column in getColumns() | filter:columns" ng-show="isAllowed(column)" class="option">
+                <li ng-click="addColumn(column)" ng-repeat="column in getColumns() | filter:columns" ng-show="true" class="option">
                     <span>{{ column.name }}</span>
                     <small class="definition-description">{{ column.description }}</small>
                 </li>
