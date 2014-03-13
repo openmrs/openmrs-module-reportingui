@@ -173,6 +173,88 @@ public class AdHocAnalysisFragmentController {
         }
     }
 
+
+    public Result evaluateRowQuery(@RequestParam("rowQueries") String rowQueriesJson,
+                          @RequestParam("parameterValues") String parameterValuesJson,
+                          @RequestParam(value = "customCombination", required = false) String customCombination,
+                          @RequestParam("rowIndex") int rowIndex,
+                          UiUtils ui,
+                          @SpringBean AllDefinitionLibraries definitionLibraries,
+                          @SpringBean CohortDefinitionService cohortDefinitionService,
+                          @SpringBean DataSetDefinitionService dataSetDefinitionService) throws Exception {
+
+        ObjectMapper jackson = new ObjectMapper();
+        ArrayNode rowQueries = jackson.readValue(rowQueriesJson, ArrayNode.class);
+
+        Map<String, Object> paramValues = parseParameterValues(jackson, parameterValuesJson);
+
+        Result result = new Result();
+
+        CohortDefinition composedRowQuery;
+        CohortDefinition singleComposedRowQuery;
+
+        if (rowQueries.size() > rowIndex) {
+            CompositionCohortDefinition composition = new CompositionCohortDefinition();
+            JsonNode rowQuery=rowQueries.get(rowIndex); // Evaluating of rowIndex element of rowQuery
+            DefinitionLibraryCohortDefinition cohortDefinition = new DefinitionLibraryCohortDefinition(rowQuery.get("key").getTextValue());
+            cohortDefinition.loadParameters(definitionLibraries);
+
+            Map<String, Object> mappings = Mapped.straightThroughMappings(cohortDefinition);
+            composition.addSearch("" + 1, cohortDefinition, mappings);
+            composition.setCompositionString(OpenmrsUtil.join(composition.getSearches().keySet(), " AND "));
+            singleComposedRowQuery=composition;
+
+            EvaluatedCohort cohort = cohortDefinitionService.evaluate(singleComposedRowQuery, new EvaluationContext());
+            result.setNumberOfResults(cohort.getMemberIds().size());
+        }
+
+        return result;
+    }
+
+    public Result evaluateWholeComposition(@RequestParam("rowQueries") String rowQueriesJson,
+                                   @RequestParam("parameterValues") String parameterValuesJson,
+                                   @RequestParam(value = "customCombination", required = false) String customCombination,
+                                   UiUtils ui,
+                                   @SpringBean AllDefinitionLibraries definitionLibraries,
+                                   @SpringBean CohortDefinitionService cohortDefinitionService,
+                                   @SpringBean DataSetDefinitionService dataSetDefinitionService) throws Exception {
+
+        ObjectMapper jackson = new ObjectMapper();
+        ArrayNode rowQueries = jackson.readValue(rowQueriesJson, ArrayNode.class);
+
+        Result result = new Result();
+        CohortDefinition composedRowQuery;
+
+        if (rowQueries.size() > 0) {
+            CompositionCohortDefinition composition = new CompositionCohortDefinition();
+            int i = 0;
+            for (JsonNode rowQuery : rowQueries) {
+                i += 1;
+                DefinitionLibraryCohortDefinition cohortDefinition = new DefinitionLibraryCohortDefinition(rowQuery.get("key").getTextValue());
+                cohortDefinition.loadParameters(definitionLibraries);
+
+                Map<String, Object> mappings = Mapped.straightThroughMappings(cohortDefinition);
+                composition.addSearch("" + i, cohortDefinition, mappings);
+            }
+
+            if (StringUtils.isNotBlank(customCombination)) {
+                composition.setCompositionString(customCombination);
+            } else {
+                composition.setCompositionString(OpenmrsUtil.join(composition.getSearches().keySet(), " AND "));
+            }
+
+            composedRowQuery = composition;
+        }
+        else {
+            composedRowQuery = new AllPatientsCohortDefinition();
+        }
+
+        EvaluatedCohort cohort = cohortDefinitionService.evaluate(composedRowQuery, new EvaluationContext());
+        result.setAllRows(cohort.getMemberIds());
+
+        return result;
+    }
+
     public SimpleObject runAdHocExport(@RequestParam("dataset") List<String> dsdUuids,
                                        @RequestParam("outputFormat") String outputFormat,
                                        //@MethodParam("getParamValues") Map<String, Object> paramValues, // UIFR-137
@@ -260,11 +342,21 @@ public class AdHocAnalysisFragmentController {
 
         private Set<Integer> allRows;
 
+        public int numberOfResults;
+
         private List<String> columnNames;
 
         private List<List<String>> data;
 
         public Result() { }
+
+        public void setNumberOfResults(int singleRowSize) {
+            this.numberOfResults = singleRowSize;
+        }
+
+        public int getNumberOfResults() {
+            return this.numberOfResults;
+        }
 
         public Set<Integer> getAllRows() {
             return allRows;

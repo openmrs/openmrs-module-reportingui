@@ -124,6 +124,10 @@ var app = angular.module('adHocAnalysis', ['ui.bootstrap']).
 
         $scope.dataExport.columns = [];
 
+        $scope.rowFiltersResultCounts = [];
+
+        $scope.resultCount = [];
+
         if (initialSetup) {
             $scope.dataExport.uuid = initialSetup.uuid;
             $scope.dataExport.name = initialSetup.name;
@@ -196,11 +200,15 @@ var app = angular.module('adHocAnalysis', ['ui.bootstrap']).
                 $scope.dataExport.rowFilters.push(definition);
                 setDirty();
             }
+            $scope.evaluateRowQuery($scope.dataExport.rowFilters.length-1);
+            $scope.evaluateWholeComposition();
         }
 
         $scope.removeRow = function(idx) {
             $scope.dataExport.rowFilters.splice(idx, 1);
             setDirty();
+            shiftRowFilterCountsAfterDeletingFilter(idx);
+            $scope.evaluateWholeComposition();
         }
 
         $scope.addColumn = function(definition) {
@@ -233,6 +241,7 @@ var app = angular.module('adHocAnalysis', ['ui.bootstrap']).
         $scope.applyEditCombination = function() {
             $scope.dataExport.customRowFilterCombination = $('#custom-combination').val();
             $scope.editingCombination = false;
+            $scope.evaluateWholeComposition();
             setDirty();
         }
 
@@ -247,6 +256,8 @@ var app = angular.module('adHocAnalysis', ['ui.bootstrap']).
         $scope.maxDay = moment().startOf('day').toDate();
 
         $scope.results = null;
+
+        $scope.wholeCompositionSize = null;
 
         $scope.focusFirstElement = function() {
             $timeout(function() {
@@ -401,6 +412,55 @@ var app = angular.module('adHocAnalysis', ['ui.bootstrap']).
                 }).
                 error(function(data, status, headers, config) {
                     emr.handleParsedError(data);
+                });
+        }
+
+        shiftRowFilterCountsAfterDeletingFilter=function(indexDeleted){
+            for(var i=indexDeleted;i<$scope.rowFiltersResultCounts.length-1;i++){
+                $scope.rowFiltersResultCounts[i]=$scope.rowFiltersResultCounts[i+1];
+                $scope.resultCount[i]=$scope.resultCount[i+1];
+            }
+        }
+
+        $scope.evaluateRowQuery = function(rowIndex) {
+            $scope.resultCount[rowIndex] = { loading: true };
+
+            var parameterValues = {};
+            _.each($scope.dataExport.parameters, function(item) {
+                parameterValues[item.name] = item.value;
+            });
+
+            post(emr.fragmentActionLink('reportingui', 'adHocAnalysis', 'evaluateRowQuery'),
+                {
+                    rowQueries: angular.toJson($scope.dataExport.rowFilters),
+                    parameterValues: angular.toJson(parameterValues),
+                    customCombination: $scope.dataExport.customRowFilterCombination,
+                    rowIndex: rowIndex
+                }).
+
+                success(function(data, status, headers, config) {
+                    $scope.resultCount[rowIndex] = data;
+                    $scope.rowFiltersResultCounts[rowIndex]= $scope.resultCount[rowIndex].numberOfResults;
+                });
+        }
+
+        $scope.evaluateWholeComposition = function() {
+            $scope.wholeCompositionSize = { loading: true };
+
+            var parameterValues = {};
+            _.each($scope.dataExport.parameters, function(item) {
+                parameterValues[item.name] = item.value;
+            });
+
+            post(emr.fragmentActionLink('reportingui', 'adHocAnalysis', 'evaluateWholeComposition'),
+                {
+                    rowQueries: angular.toJson($scope.dataExport.rowFilters),
+                    parameterValues: angular.toJson(parameterValues),
+                    customCombination: $scope.dataExport.customRowFilterCombination
+                }).
+
+                success(function(data, status, headers, config) {
+                    $scope.wholeCompositionSize = data;
                 });
         }
 
