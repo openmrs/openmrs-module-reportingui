@@ -104,6 +104,11 @@
                     <span ng-hide="editingCombination">
                         <span ng-hide="dataExport.customRowFilterCombination">${ ui.message("reportingui.adHocReport.searchCriteria.combination") }</span>
                         <span ng-show="dataExport.customRowFilterCombination">${ ui.message("reportingui.adHocReport.searchCriteria.customRowFilterCombination") }</span>
+                        <span class="step" ng-show="wholeCompositionSize.loading">
+                            (<img class="spinner" src="${ ui.resourceLink("uicommons", "images/spinner.gif") }"/>
+                            ${ ui.message("reportingui.adHocReport.searchCriteria.calculating") })
+                        </span>
+                        <span ng-show="!wholeCompositionSize.loading">({{wholeCompositionSize.allRows.length}} results)</span>
                         <i ng-click="editCombination()" class="icon-edit small" id="edit-button"></i>
                     </span>
                     <span ng-show="editingCombination">
@@ -120,6 +125,9 @@
                     </span>
                     <span class="actions">
                         <i ng-click="removeRow(\$index)"class="icon-remove small"></i>
+                        <span ng-show="!resultCount[\$index].loading">{{ rowFiltersResultCounts[\$index] }} results </span>
+                        <img class="spinner" ng-show="resultCount[\$index].loading" src="${ ui.resourceLink("uicommons", "images/spinner.gif") }" />
+
                     </span>
                 </li>
             </ul>
