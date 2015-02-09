@@ -28,3 +28,8 @@ omod/.settings/
 omod/src/main/compass/sass-external/
 omod/src/main/webapp/resources/styles/
 *.sass-cache
+
+# Rubygems build directories #
+omod/.rubygems
+omod/.rubygems-provided
+
