@@ -35,7 +35,7 @@
     <properties>
         <openmrsCoreVersion>1.9.4</openmrsCoreVersion>
         <reportingModuleVersion>0.9.3</reportingModuleVersion>
-        <reportingrestModuleVersion>1.4-SNAPSHOT</reportingrestModuleVersion>
+        <reportingrestModuleVersion>1.4</reportingrestModuleVersion>
         <webservicesrestModuleVersion>2.5</webservicesrestModuleVersion>
         <uiframeworkModuleVersion>3.2</uiframeworkModuleVersion>
         <appuiModuleVersion>1.0</appuiModuleVersion>
