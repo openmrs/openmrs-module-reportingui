@@ -3,6 +3,7 @@
 
     ui.includeJavascript("uicommons", "moment.min.js")
     ui.includeJavascript("uicommons", "angular.js")
+    ui.includeJavascript("uicommons", "angular-common.js")
     ui.includeJavascript("uicommons", "angular-resource.min.js")
     ui.includeJavascript("uicommons", "angular-sanitize.min.js")
     ui.includeJavascript("uicommons", "angular-app.js")
