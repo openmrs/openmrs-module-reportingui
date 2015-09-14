@@ -22,7 +22,7 @@
                 selector: '#dialog-confirm',
                 actions: {
                     confirm: function() {
-                        jq.ajax('/' + OPENMRS_CONTEXT_PATH + '/ws/rest/v1/reportingrest/adhocdataset/' + uuid + '?purge=true', {
+                        jq.ajax('/' + OPENMRS_CONTEXT_PATH + '/ws/rest/v1/reportingui/adhocdataset/' + uuid + '?purge=true', {
                             type: 'DELETE',
                             dataType: 'json',
                             success: function(data, status, xhr) {

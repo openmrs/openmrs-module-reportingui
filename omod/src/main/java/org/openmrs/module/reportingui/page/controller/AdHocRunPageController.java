@@ -15,7 +15,7 @@
 package org.openmrs.module.reportingui.page.controller;
 
 import org.openmrs.api.context.Context;
-import org.openmrs.module.reportingrest.adhoc.AdHocExportManager;
+import org.openmrs.module.reportingui.adhoc.AdHocExportManager;
 import org.openmrs.ui.framework.annotation.SpringBean;
 import org.openmrs.ui.framework.page.PageModel;
 import org.springframework.web.bind.annotation.RequestParam;

@@ -16,8 +16,8 @@ import org.openmrs.module.reporting.report.definition.service.ReportDefinitionSe
 import org.openmrs.module.reporting.report.renderer.RenderingMode;
 import org.openmrs.module.reporting.report.renderer.ReportRenderer;
 import org.openmrs.module.reporting.report.service.ReportService;
-import org.openmrs.module.reportingrest.adhoc.AdHocDataSet;
-import org.openmrs.module.reportingrest.adhoc.AdHocExportManager;
+import org.openmrs.module.reportingui.adhoc.AdHocDataSet;
+import org.openmrs.module.reportingui.adhoc.AdHocExportManager;
 import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.annotation.SpringBean;

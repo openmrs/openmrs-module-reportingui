@@ -12,21 +12,21 @@
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
 
-package org.openmrs.module.reportingui.page.controller;
+package org.openmrs.module.reportingui.adhoc.task;
 
 import org.openmrs.api.context.Context;
+import org.openmrs.module.reporting.report.task.ReportingTask;
 import org.openmrs.module.reportingui.adhoc.AdHocExportManager;
-import org.openmrs.ui.framework.annotation.SpringBean;
-import org.openmrs.ui.framework.page.PageModel;
 
-import java.util.List;
+/**
+ * @see org.openmrs.module.reportingui.adhoc.AdHocExportManager#deleteTransientReportDefinitions()
+ */
+public class DeleteOldOldAdHocReportDefinitionsTask extends ReportingTask {
 
-public class AdHocManagePageController {
-
-    public void get(@SpringBean AdHocExportManager adHocExportManager,
-                    PageModel model) {
-        List<AdHocExportManager.AdHocDataSet> exports = adHocExportManager.getAdHocDataSets(Context.getAuthenticatedUser());
-        model.addAttribute("exports", exports);
-    }
+	@Override
+	public synchronized void executeTask() {
+		AdHocExportManager m = Context.getRegisteredComponents(AdHocExportManager.class).get(0);
+		m.deleteTransientReportDefinitions();
+	}
 
 }

@@ -530,7 +530,7 @@ angular.module('reportingui').
         $scope.preview = function() {
             $scope.results = { loading: true };
 
-            postJSON('/' + OPENMRS_CONTEXT_PATH + '/ws/rest/v1/reportingrest/adhocquery?v=preview', stripTimeFromParameters($scope.dataExport)).
+            postJSON('/' + OPENMRS_CONTEXT_PATH + '/ws/rest/v1/reportingui/adhocquery?v=preview', stripTimeFromParameters($scope.dataExport)).
                 success(function(data, status, headers, config) {
                     $scope.results = data;
                 }).
