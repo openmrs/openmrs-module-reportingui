@@ -33,6 +33,9 @@
         <require_module version="${appuiModuleVersion}">
             org.openmrs.module.appui
         </require_module>
+        <require_module version="${appframeworkModuleVersion}">
+            org.openmrs.module.appframework
+        </require_module>
     </require_modules>
 
     <activator>${project.parent.groupId}.${project.parent.artifactId}.ReportingUiModuleActivator</activator>
