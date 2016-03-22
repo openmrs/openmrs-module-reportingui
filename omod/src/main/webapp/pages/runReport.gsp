@@ -32,7 +32,8 @@ ${ ui.includeFragment("appui", "messages", [ codes: [
         "reportingui.reportRequest.Status.FAILED", "reportingui.reportRequest.Status.COMPLETED", "reportingui.reportRequest.Status.SCHEDULE_COMPLETED",
         "reportingui.reportRequest.Status.SAVED",
         "reportingui.reportRequest.Priority.HIGHEST", "reportingui.reportRequest.Priority.HIGH", "reportingui.reportRequest.Priority.NORMAL",
-        "reportingui.reportRequest.Priority.LOW", "reportingui.reportRequest.Priority.LOWEST"]
+        "reportingui.reportRequest.Priority.LOW", "reportingui.reportRequest.Priority.LOWEST",
+        "reportingui.runReport.missingParameter"]
 ])}
 
 <div ng-app="runReportApp" ng-controller="RunReportController" ng-init="refreshHistory()">
