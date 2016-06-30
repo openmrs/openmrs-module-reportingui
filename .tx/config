@@ -6,4 +6,10 @@ source_file = api/src/main/resources/messages.properties
 source_lang = en
 trans.fr = api/src/main/resources/messages_fr.properties
 trans.ht = api/src/main/resources/messages_ht.properties
-
+trans.pt = api/src/main/resources/messages_pt.properties
+trans.pt_BR = api/src/main/resources/messages_pt_BR.properties
+trans.hr = api/src/main/resources/messages_hr.properties
+trans.pl = api/src/main/resources/messages_pl.properties
+trans.es = api/src/main/resources/messages_es.properties
+trans.de = api/src/main/resources/messages_de.properties
+trans.ru = api/src/main/resources/messages_ru.properties

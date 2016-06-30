@@ -55,6 +55,30 @@
         <lang>ht</lang>
         <file>messages_ht.properties</file>
     </messages>
+    <messages>
+        <lang>de</lang>
+        <file>messages_de.properties</file>
+    </messages>
+    <messages>
+        <lang>es</lang>
+        <file>messages_es.properties</file>
+    </messages>
+    <messages>
+        <lang>hr</lang>
+        <file>messages_hr.properties</file>
+    </messages>
+    <messages>
+        <lang>pl</lang>
+        <file>messages_pl.properties</file>
+    </messages>
+    <messages>
+        <lang>pt_BR</lang>
+        <file>messages_pt_BR.properties</file>
+    </messages>
+    <messages>
+        <lang>ru</lang>
+        <file>messages_ru.properties</file>
+    </messages>
 
 </module>
 
