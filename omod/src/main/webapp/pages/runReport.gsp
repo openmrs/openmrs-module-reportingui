@@ -170,6 +170,12 @@ ${ ui.includeFragment("appui", "messages", [ codes: [
                                 useTime: false,
                                 defaultDate: it.defaultValue
                         ])}
+                    <% } else if (it.type == org.openmrs.Location) { %>
+                        ${ ui.includeFragment("uicommons", "field/location", [
+                                formFieldName: "parameterValues[" + it.name + "]",
+                                label: it.labelOrName,
+                                initialValue: it.defaultValue
+                        ])}
                     <% } else { %>
                         Unknown parameter type: ${ it.type }
                     <% } %>
