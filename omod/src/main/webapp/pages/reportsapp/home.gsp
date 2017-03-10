@@ -4,6 +4,7 @@
 
     def appFrameworkService = context.getService(context.loadClass("org.openmrs.module.appframework.service.AppFrameworkService"))
     def overviews = appFrameworkService.getExtensionsForCurrentUser("org.openmrs.module.reportingui.reports.overview")
+    def monitoringReports = appFrameworkService.getExtensionsForCurrentUser("org.openmrs.module.reportingui.reports.monitoring")
     def dataQualityReports = appFrameworkService.getExtensionsForCurrentUser("org.openmrs.module.reportingui.reports.dataquality")
     def dataExports = appFrameworkService.getExtensionsForCurrentUser("org.openmrs.module.reportingui.reports.dataexport")
 
@@ -28,6 +29,17 @@
                 </li>
             <% } %>
         </ul>
+    <% } %>
+
+    <% if (monitoringReports) { %>
+    <p>${ ui.message("reportingui.reportsapp.monitoringReports") }</p>
+    <ul>
+        <% monitoringReports.each { %>
+        <li>
+            ${ ui.includeFragment("uicommons", "extension", [ extension: it, contextModel: contextModel ]) }
+        </li>
+        <% } %>
+    </ul>
     <% } %>
 
     <% if (dataQualityReports) { %>
