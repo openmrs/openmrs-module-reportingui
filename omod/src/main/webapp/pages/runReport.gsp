@@ -174,7 +174,7 @@ ${ ui.includeFragment("appui", "messages", [ codes: [
                         ${ ui.includeFragment("uicommons", "field/location", [
                                 formFieldName: "parameterValues[" + it.name + "]",
                                 label: it.labelOrName,
-                                initialValue: it.defaultValue
+                                initialValue: it.defaultValue ?: sessionContext.sessionLocation
                         ])}
                     <% } else { %>
                         Unknown parameter type: ${ it.type }
