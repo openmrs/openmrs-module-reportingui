@@ -88,9 +88,9 @@
             <ul>
                 <li class="parameter" ng-repeat="parameter in dataExport.parameters">
                     {{ \$index + 1 }}.
-                    {{ parameter.label | omrs.display }}:
+                    {{ parameter.label | omrsDisplay }}:
                     <span ng-show="parameter.collectionType">{{ parameter.collectionType }} of </span>
-                    {{ parameter.type | omrs.display:'reportingui.parameter.type.'}}
+                    {{ parameter.type | omrsDisplay:'reportingui.parameter.type.'}}
                 </li>
             </ul>
         </div>
@@ -137,7 +137,7 @@
                         <i ng-click="removeRow(\$index)"class="icon-remove small"></i>
                     </span>
                     <span class="definition-param" ng-repeat="param in rowQuery.parameters" ng-hide="isParameterGloballySet(param)">
-                        {{ param.name }}: {{ rowQuery.parameterValues[param.name] | omrs.display }}
+                        {{ param.name }}: {{ rowQuery.parameterValues[param.name] | omrsDisplay }}
                     </span>
                 </li>
             </ul>
@@ -178,7 +178,7 @@
                         <i ng-hide="\$last" ng-click="moveColumnDown(\$index)"class="icon-chevron-down small"></i>
                     </span>
                     <span class="definition-param" ng-repeat="param in col.parameters" ng-hide="isParameterGloballySet(param)">
-                        {{ param.name }}: {{ col.parameterValues[param.name] | omrs.display }}
+                        {{ param.name }}: {{ col.parameterValues[param.name] | omrsDisplay }}
                     </span>
                 </li>
             </ul>
@@ -196,7 +196,7 @@
         <div class="step-content">
             <span class="angular-datepicker">
                 <div class="form-horizontal">
-                    <label>{{ dataExport.parameters[0].label | omrs.display }}</label>
+                    <label>{{ dataExport.parameters[0].label | omrsDisplay }}</label>
                     <input type="text" class="datepicker-input" datepicker-popup="dd-MMMM-yyyy" ng-model="dataExport.parameters[0].value" is-open="isStartDatePickerOpen" max="maxDay" date-disabled="disabled(date, mode)" ng-required="true" show-weeks="false" placeholder="${ ui.message('reportingui.adHocReport.timeframe.startDateLabel')}" />
                     <i class="icon-calendar btn small" ng-click="openStartDatePicker()"></i>
                 </div>
@@ -204,7 +204,7 @@
 
             <span class="angular-datepicker">
                 <div class="form-horizontal">
-                    <label>{{ dataExport.parameters[1].label | omrs.display }}</label>
+                    <label>{{ dataExport.parameters[1].label | omrsDisplay }}</label>
                     <input type="text" class="datepicker-input" datepicker-popup="dd-MMMM-yyyy" ng-model="dataExport.parameters[1].value" is-open="isEndDatePickerOpen" min="dataExport.parameters[0].value" max="maxDay" date-disabled="disabled(date, mode)" ng-required="true" show-weeks="false" placeholder="${ ui.message('reportingui.adHocReport.timeframe.endDateLabel')}" />
                     <i ng-click="openEndDatePicker()" class="icon-calendar btn small"></i>
                 </div>

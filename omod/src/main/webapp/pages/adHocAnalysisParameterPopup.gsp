@@ -7,7 +7,7 @@
     </div>
     <div class="modal-params">
         <div ng-repeat="param in definition.parameters | filter:paramFilter">
-            <label>{{ param.label | omrs.display }}</label>
+            <label>{{ param.label | omrsDisplay }}</label>
             <span ng-include="'paramWidget/' + param.type + '.page?collectionType=' + param.collectionType"/>
         </div>
     </div>

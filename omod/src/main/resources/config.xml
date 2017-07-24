@@ -36,6 +36,9 @@
         <require_module version="${appframeworkModuleVersion}">
             org.openmrs.module.appframework
         </require_module>
+        <require_module version="2.3.0">
+            org.openmrs.module.uicommons
+        </require_module>
     </require_modules>
 
     <activator>${project.parent.groupId}.${project.parent.artifactId}.ReportingUiModuleActivator</activator>

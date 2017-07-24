@@ -49,13 +49,13 @@
             <legend>${ ui.message("reportingui.reportStatus.requestHeading") }</legend>
 
             <p>
-                ${ ui.message("reportingui.reportStatus.requestedBy") }: {{ reportRequest.requestedBy | omrs.display }}
+                ${ ui.message("reportingui.reportStatus.requestedBy") }: {{ reportRequest.requestedBy | omrsDisplay }}
             </p>
             <p>
                 ${ ui.message("reportingui.reportStatus.requestDate") }: {{ reportRequest.requestDate | date:'medium'}}
             </p>
             <p>
-                ${ ui.message("reportingui.reportRequest.outputFormat") }: {{ reportRequest.renderingMode.label | omrs.display:'reportingui.outputFormat.' }}
+                ${ ui.message("reportingui.reportRequest.outputFormat") }: {{ reportRequest.renderingMode.label | omrsDisplay:'reportingui.outputFormat.' }}
             </p>
         </fieldset>
 
@@ -87,7 +87,7 @@
                 <i class="icon-save"></i>
             </span>
 
-            {{ reportRequest.status | omrs.display:'reportingui.reportRequest.Status.' }}
+            {{ reportRequest.status | omrsDisplay:'reportingui.reportRequest.Status.' }}
 
             <p ng-show="canDownload()">
                 <button ng-click="download()">
