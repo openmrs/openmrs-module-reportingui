@@ -35,7 +35,7 @@ public class StringArrayToCohortConverter implements Converter<String[], Cohort>
         for (String maybeCommaSeparated : source) {
             String[] patientIds = maybeCommaSeparated.split(",");
             for (String patientId : patientIds) {
-                cohort.addMember(Integer.valueOf(patientId));
+                cohort.getMemberIds().add(Integer.valueOf(patientId));
             }
         }
         return cohort;
