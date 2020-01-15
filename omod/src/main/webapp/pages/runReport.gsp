@@ -1,5 +1,5 @@
 <%
-    ui.decorateWith("appui", "standardEmrPage")
+    ui.decorateWith("appui", "standardEmrPage", [includeBootstrap: false])
     ui.includeCss("reportingui", "runReport.css")
 
     ui.includeJavascript("uicommons", "angular.min.js")
