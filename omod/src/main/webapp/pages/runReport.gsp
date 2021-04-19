@@ -176,6 +176,11 @@ ${ ui.includeFragment("appui", "messages", [ codes: [
                                 label: it.labelOrName,
                                 initialValue: it.defaultValue ?: sessionContext.sessionLocation
                         ])}
+                    <% } else if (it.type == java.lang.String) { %>
+                        ${ ui.includeFragment("uicommons", "field/text", [
+                                formFieldName: "parameterValues[" + it.name + "]",
+                                label: it.labelOrName
+                        ])}
                     <% } else { %>
                         Unknown parameter type: ${ it.type }
                     <% } %>
