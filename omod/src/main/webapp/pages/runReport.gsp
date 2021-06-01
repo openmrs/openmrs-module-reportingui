@@ -175,7 +175,7 @@ ${ ui.includeFragment("appui", "messages", [ codes: [
                                 formFieldName: "parameterValues[" + it.name + "]",
                                 label: it.labelOrName,
                                 initialValue: it.defaultValue ?: sessionContext.sessionLocation,
-                                classes: ["location-list"]
+                                classes: ["drop-down-list"]
                         ])}
                     <% } else if (it.type == java.lang.String) { %>
                         ${ ui.includeFragment("uicommons", "field/text", [
