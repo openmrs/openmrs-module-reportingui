@@ -9,6 +9,21 @@
     def isInteractive = {
         interactiveClass.isInstance(it.renderer)
     }
+
+    def quartersOptions = []
+    quartersOptions << [label: 'Q1', value: 'Q1', selected: false]
+    quartersOptions << [label: 'Q2', value: 'Q2', selected: false]
+    quartersOptions << [label: 'Q3', value: 'Q3', selected: false]
+    quartersOptions << [label: 'Q4', value: 'Q4', selected: false]
+
+    def ALLOWED_LOCALE_LIST = org.openmrs.api.context.Context.getAdministrationService().getGlobalProperty('locale.allowed.list')
+
+    def localeList = ALLOWED_LOCALE_LIST.split(',')*.trim();
+
+    def localeOptions = []
+    localeList.each { locale ->
+        localeOptions << [label: locale.toUpperCase(), value: locale, selected: false]
+    }
 %>
 
 <script type="text/javascript">
@@ -174,7 +189,31 @@ ${ ui.includeFragment("appui", "messages", [ codes: [
                         ${ ui.includeFragment("uicommons", "field/location", [
                                 formFieldName: "parameterValues[" + it.name + "]",
                                 label: it.labelOrName,
-                                initialValue: it.defaultValue ?: sessionContext.sessionLocation
+                                initialValue: it.defaultValue ?: sessionContext.sessionLocation,
+                                classes: ["drop-down-list"]
+                        ])}
+                    <% } else if (it.type == org.openmrs.EncounterType) { %>
+                        ${ ui.includeFragment("uicommons", "field/encounterType", [
+                                formFieldName: "parameterValues[" + it.name + "]",
+                                label: it.labelOrName,
+                                initialValue: it.defaultValue,
+                                classes: ["drop-down-list"]
+                        ])}
+                    <% } else if (it.type == java.lang.String && it.name == "Quarter") { %>
+                        ${ ui.includeFragment("uicommons", "field/dropDown", [
+                                label: it.labelOrName,
+                                formFieldName: "parameterValues[" + it.name + "]",
+                                options: quartersOptions,
+                                classes: ["drop-down-list"],
+                                hideEmptyLabel: true
+                        ])}
+                    <% } else if (it.type == java.lang.String && it.name == "Locale") { %>
+                        ${ ui.includeFragment("uicommons", "field/dropDown", [
+                                label: it.labelOrName,
+                                formFieldName: "parameterValues[" + it.name + "]",
+                                options: localeOptions,
+                                classes: ["drop-down-list"],
+                                hideEmptyLabel: true
                         ])}
                     <% } else { %>
                         Unknown parameter type: ${ it.type }
