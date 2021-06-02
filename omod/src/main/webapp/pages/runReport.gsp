@@ -199,7 +199,7 @@ ${ ui.includeFragment("appui", "messages", [ codes: [
                                 initialValue: it.defaultValue,
                                 classes: ["drop-down-list"]
                         ])}
-                    <% } else if (it.type == java.lang.String && it.name == "Quarter") { %>
+                    <% } else if (it.type == java.lang.String && it.name.equalsIgnoreCase("Quarter")) { %>
                         ${ ui.includeFragment("uicommons", "field/dropDown", [
                                 label: it.labelOrName,
                                 formFieldName: "parameterValues[" + it.name + "]",
@@ -207,7 +207,7 @@ ${ ui.includeFragment("appui", "messages", [ codes: [
                                 classes: ["drop-down-list"],
                                 hideEmptyLabel: true
                         ])}
-                    <% } else if (it.type == java.lang.String && it.name == "Locale") { %>
+                    <% } else if (it.type == java.lang.String && it.name.equalsIgnoreCase("Locale")) { %>
                         ${ ui.includeFragment("uicommons", "field/dropDown", [
                                 label: it.labelOrName,
                                 formFieldName: "parameterValues[" + it.name + "]",
