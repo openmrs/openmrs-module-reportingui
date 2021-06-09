@@ -3,7 +3,7 @@
 
     <groupId>org.openmrs.module</groupId>
     <artifactId>reportingui</artifactId>
-    <version>1.8.0-SNAPSHOT</version>
+    <version>1.8.0</version>
     <packaging>pom</packaging>
     <name>Reporting UI Module</name>
     <description>Integration between reporting, UI Framework, and App UI</description>
@@ -24,7 +24,7 @@
         <connection>scm:git:git@github.com:openmrs/openmrs-module-reportingui.git</connection>
         <developerConnection>scm:git:git@github.com:openmrs/openmrs-module-reportingui.git</developerConnection>
         <url>scm:git:git@github.com:openmrs/openmrs-module-reportingui.git</url>
-      <tag>HEAD</tag>
+      <tag>1.8.0</tag>
   </scm>
 
     <modules>
