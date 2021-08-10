@@ -214,6 +214,13 @@ ${ ui.includeFragment("appui", "messages", [ codes: [
                                 options: localeOptions,
                                 classes: ["drop-down-list"],
                                 hideEmptyLabel: true
+                                initialValue: it.defaultValue ?: sessionContext.sessionLocation,
+                                classes: ["drop-down-list"]
+                        ])}
+                    <% } else if (it.type == java.lang.String) { %>
+                        ${ ui.includeFragment("uicommons", "field/text", [
+                                formFieldName: "parameterValues[" + it.name + "]",
+                                label: it.labelOrName
                         ])}
                     <% } else { %>
                         Unknown parameter type: ${ it.type }
