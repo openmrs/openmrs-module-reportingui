@@ -213,8 +213,8 @@ ${ ui.includeFragment("appui", "messages", [ codes: [
                                 formFieldName: "parameterValues[" + it.name + "]",
                                 options: localeOptions,
                                 classes: ["drop-down-list"],
-                                hideEmptyLabel: true
-                                initialValue: it.defaultValue ?: sessionContext.sessionLocation,
+                                hideEmptyLabel: true,
+                                initialValue: it.defaultValue,
                                 classes: ["drop-down-list"]
                         ])}
                     <% } else if (it.type == java.lang.String) { %>
