@@ -201,18 +201,18 @@ ${ ui.includeFragment("appui", "messages", [ codes: [
                         ])}
                     <% } else if (it.type == java.lang.String && it.name.equalsIgnoreCase("Quarter")) { %>
                         ${ ui.includeFragment("uicommons", "field/dropDown", [
-                                label: it.labelOrName,
                                 formFieldName: "parameterValues[" + it.name + "]",
+                                label: it.labelOrName,
                                 options: quartersOptions,
-                                classes: ["drop-down-list"],
-                                hideEmptyLabel: true
+                                hideEmptyLabel: true,
+                                initialValue: it.defaultValue,
+                                classes: ["drop-down-list"]
                         ])}
                     <% } else if (it.type == java.lang.String && it.name.equalsIgnoreCase("Locale")) { %>
                         ${ ui.includeFragment("uicommons", "field/dropDown", [
-                                label: it.labelOrName,
                                 formFieldName: "parameterValues[" + it.name + "]",
+                                label: it.labelOrName,
                                 options: localeOptions,
-                                classes: ["drop-down-list"],
                                 hideEmptyLabel: true,
                                 initialValue: it.defaultValue,
                                 classes: ["drop-down-list"]
