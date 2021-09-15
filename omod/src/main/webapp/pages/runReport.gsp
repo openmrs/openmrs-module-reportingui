@@ -156,6 +156,11 @@ ${ ui.includeFragment("appui", "messages", [ codes: [
                                     <i class="icon-save small"></i>
                                     ${ ui.message("reportingui.reportRequest.save.action") }
                                 </a>
+                                <br/>
+                                <a ng-hide="request.renderingMode.interactive" ng-click="reRunRequest(request)">
+                                    <i class="icon-play small"></i>
+                                    Run Again
+                                </a>
                             </span>
                         </td>
                     </tr>

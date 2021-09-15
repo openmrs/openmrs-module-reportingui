@@ -99,4 +99,19 @@ runReportApp.controller('RunReportController', ['$scope', '$http', '$window', '$
         }
     }
 
+    $scope.reRunRequest = function(request) {
+        var months = ["Jan", "Feb", "Mar","Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        var monthsIntegers = ["01", "02", "03","04", "05", "06", "07", "08", "09", "10", "11", "12"];
+
+        var startDate = new Date(request.reportDefinition.mappings[1].value.split('.').join(' '));
+        var endDate = new Date (request.reportDefinition.mappings[0].value.split('.').join(' '));
+
+        jQuery('#run-report').find("input[name*='startDate']").val(startDate.getFullYear()+"-"+ monthsIntegers[startDate.getMonth()]+"-"+startDate.getDate());
+        jQuery('#run-report').find("input[name*='startDate']").parent().find("input[type='text']").val(startDate.getDate()+" " + months[startDate.getMonth()] +" " + startDate.getFullYear());
+        jQuery('#run-report').find("input[name*='endDate']").val(endDate.getFullYear()+"-"+  monthsIntegers[endDate.getMonth()] +"-"+endDate.getDate());
+        jQuery('#run-report').find("input[name*='endDate']").parent().find("input[type='text']").val(endDate.getDate()+" " + months[endDate.getMonth()] +" " + endDate.getFullYear());
+
+    }
+
+
 }]);
