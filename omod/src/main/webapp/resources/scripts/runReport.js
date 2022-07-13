@@ -77,17 +77,23 @@ runReportApp.controller('RunReportController', ['$scope', '$http', '$window', '$
     $scope.runReport = function() {
         // this is a plain old form, not really using angular. need to rewrite the datepickers to be angular-friendly
         var form = angular.element('#run-report');
-        var submission = form.serializeArray();
         var missingParams = [ ];
-        console.log(submission);
-        for (var i = 0; i < submission.length; ++i) {
-            var p = submission[i];
-            if (p.name.indexOf("parameterValues[") == 0) {
-                if (!p.value) {
-                    missingParams.push(p.name);
+        var submission = [], obj;
+
+        form.each(function(){
+            $(this.elements).each(function(){
+                if (this.value == "" && this.className.includes("required")) {
+                    missingParams.push(this.name);
+                }else{
+                    obj = {}
+                    obj["name"] = this.name;
+                    obj["value"] = this.value;
+                    obj["class"] = this.className;
+                    submission.push(obj)
                 }
-            }
-        }
+            })
+        });
+
         if (missingParams.length > 0) {
             emr.errorMessage(emr.message("reportingui.runReport.missingParameter", "Missing parameter values"));
         }
@@ -112,6 +118,5 @@ runReportApp.controller('RunReportController', ['$scope', '$http', '$window', '$
         jQuery('#run-report').find("input[name*='endDate']").parent().find("input[type='text']").val(endDate.getDate()+" " + months[endDate.getMonth()] +" " + endDate.getFullYear());
 
     }
-
 
 }]);

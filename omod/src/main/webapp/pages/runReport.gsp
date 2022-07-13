@@ -181,28 +181,30 @@ ${ ui.includeFragment("appui", "messages", [ codes: [
                     <% } else if (it?.widgetConfiguration?.uiframeworkFragmentProvider) { %>
                         ${ ui.includeFragment(it.widgetConfiguration.uiframeworkFragmentProvider, it.widgetConfiguration.uiframeworkFragment, [
                                 formFieldName: "parameterValues[" + it.name + "]",
-                                label: it.labelOrName
+                                label: it.labelOrName,
+                                classes: [(it.required == true ? "required" : '')]
                         ])}
                     <% } else if (it.type == java.util.Date) { %>
                         ${ ui.includeFragment("uicommons", "field/datetimepicker", [
                                 formFieldName: "parameterValues[" + it.name + "]",
                                 label: it.labelOrName,
                                 useTime: false,
-                                defaultDate: it.defaultValue
+                                defaultDate: it.defaultValue,
+                                classes: [(it.required == true ? "required" : '')]
                         ])}
                     <% } else if (it.type == org.openmrs.Location) { %>
                         ${ ui.includeFragment("uicommons", "field/location", [
                                 formFieldName: "parameterValues[" + it.name + "]",
                                 label: it.labelOrName,
                                 initialValue: it.defaultValue ?: sessionContext.sessionLocation,
-                                classes: ["drop-down-list"]
+                                classes: ["drop-down-list " + (it.required == true ? "required" : '')]
                         ])}
                     <% } else if (it.type == org.openmrs.EncounterType) { %>
                         ${ ui.includeFragment("uicommons", "field/encounterType", [
                                 formFieldName: "parameterValues[" + it.name + "]",
                                 label: it.labelOrName,
                                 initialValue: it.defaultValue,
-                                classes: ["drop-down-list"]
+                                classes: ["drop-down-list " + (it.required == true ? "required" : '')]
                         ])}
                     <% } else if (it.type == java.lang.String && it.name.equalsIgnoreCase("Quarter")) { %>
                         ${ ui.includeFragment("uicommons", "field/dropDown", [
@@ -211,7 +213,7 @@ ${ ui.includeFragment("appui", "messages", [ codes: [
                                 options: quartersOptions,
                                 hideEmptyLabel: true,
                                 initialValue: it.defaultValue,
-                                classes: ["drop-down-list"]
+                                classes: ["drop-down-list " + (it.required == true ? "required" : '')]
                         ])}
                     <% } else if (it.type == java.lang.String && it.name.equalsIgnoreCase("Locale")) { %>
                         ${ ui.includeFragment("uicommons", "field/dropDown", [
@@ -220,12 +222,13 @@ ${ ui.includeFragment("appui", "messages", [ codes: [
                                 options: localeOptions,
                                 hideEmptyLabel: true,
                                 initialValue: it.defaultValue,
-                                classes: ["drop-down-list"]
+                                classes: ["drop-down-list " + (it.required == true ? "required" : '')]
                         ])}
                     <% } else if (it.type == java.lang.String) { %>
                         ${ ui.includeFragment("uicommons", "field/text", [
                                 formFieldName: "parameterValues[" + it.name + "]",
-                                label: it.labelOrName
+                                label: it.labelOrName,
+                                classes: ["drop-down-list " + (it.required == true ? "required" : '')]
                         ])}
                     <% } else { %>
                         Unknown parameter type: ${ it.type }
