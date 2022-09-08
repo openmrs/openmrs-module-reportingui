@@ -38,6 +38,10 @@ runReportApp.controller('RunReportController', ['$scope', '$http', '$window', '$
                 console.log("Error getting completed: " + status);
                 $scope.completed = [];
             });
+
+        if(fetchReturnURL()){
+            jQuery("#returnButton").show();
+        }
     }
 
     $scope.hasResults = function() {
@@ -103,6 +107,14 @@ runReportApp.controller('RunReportController', ['$scope', '$http', '$window', '$
                 location.href = location.href;
             });
         }
+    }
+
+    $scope.returnToURL = function() {
+        window.location.href = fetchReturnURL()
+    }
+
+    var fetchReturnURL = function() {
+        return new URLSearchParams(window.location.search).get("returnUrl")
     }
 
     $scope.reRunRequest = function(request) {
