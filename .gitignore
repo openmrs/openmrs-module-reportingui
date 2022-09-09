@@ -4,7 +4,6 @@
 target/
 api/target/
 omod/target/
-omod/src/main/compass/.sass-cache
 
 /.settings
 /.project
@@ -25,11 +24,10 @@ api/activemq-data
 omod/.project
 omod/.classpath
 omod/.settings/
-omod/src/main/compass/sass-external/
-omod/src/main/webapp/resources/styles/
-*.sass-cache
 
-# Rubygems build directories #
-omod/.rubygems
-omod/.rubygems-provided
+omod/node/
+omod/node_modules/
 
+omod/src/main/webapp/resources/styles/**/*.css
+omod/src/main/webapp/resources/styles/**/*.css.map
+omod/src/main/webapp/resources/styles/lib/

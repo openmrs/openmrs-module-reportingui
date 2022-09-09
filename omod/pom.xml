@@ -208,7 +208,7 @@
                                     <version>${uicommonsModuleVersion}</version>
                                     <type>zip</type>
                                     <overWrite>true</overWrite>
-                                    <outputDirectory>src/main/compass/sass-external</outputDirectory>
+                                    <outputDirectory>src/main/webapp/resources/styles/lib</outputDirectory>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
