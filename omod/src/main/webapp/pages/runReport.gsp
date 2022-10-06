@@ -260,9 +260,13 @@ ${ ui.includeFragment("appui", "messages", [ codes: [
                     ]) }
                 <% } %>
 
-                <button type="submit" class="confirm right" ng-class="{disabled: submitting}" ng-disabled="submitting">
+                <button id="submitButton" type="submit" class="confirm right" ng-class="{disabled: submitting}" >
                     <i class="icon-play"></i>
                     ${ ui.message("reportingui.runButtonLabel") }
+                </button>
+                <button id="returnButton" type="button" class="confirm right" ng-class="{disabled: submitting}"  ng-click="returnToURL(parameters)" ng-disabled="submitting" >
+                    <i class="icon-play"></i>
+                    ${ ui.message("reportingui.returnButtonLabel") }
                 </button>
             </form>
         </fieldset>
