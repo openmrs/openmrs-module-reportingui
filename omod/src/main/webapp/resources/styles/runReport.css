@@ -1,0 +1,35 @@
+.past-reports {
+  display: inline-block;
+  vertical-align: top;
+  width: 60%;
+}
+.past-reports table {
+  font-size: 0.8em;
+}
+.past-reports a {
+  cursor: pointer;
+}
+
+.running-reports {
+  display: inline-block;
+  vertical-align: top;
+  width: 38%;
+}
+.running-reports table {
+  font-size: 0.9em;
+}
+
+.report-list {
+  margin-bottom: 1em;
+}
+
+img.small {
+  width: 24px;
+  height: 24px;
+}
+
+.drop-down-list {
+  width: 100%;
+}
+
+/*# sourceMappingURL=runReport.css.map */

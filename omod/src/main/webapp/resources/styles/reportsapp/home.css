@@ -1,0 +1,47 @@
+.reportBox {
+  display: inline-block;
+  color: #363463;
+  vertical-align: top;
+  margin: 0 10px;
+  width: 47%;
+}
+.reportBox p {
+  font-size: 1.2em;
+  font-family: "OpenSansBold";
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+.reportBox ul {
+  border-bottom: 3px solid white;
+  background-color: #003F5E;
+  color: #FFFFFF;
+  padding: 10px;
+}
+.reportBox ul li {
+  padding-bottom: 0.5em;
+}
+.reportBox ul a, .reportBox ul a:visited, .reportBox ul a.visited {
+  color: #FFFFFF;
+}
+.reportBox ul span.label {
+  display: inline-block;
+}
+.reportBox ul span.data {
+  margin: 0 2%;
+  display: inline-block;
+  font-size: 1.8em;
+  font-family: "OpenSansBold";
+}
+.reportBox ul span.data .number {
+  font-size: 0.8em;
+  font-family: "OpenSans";
+}
+.reportBox ul span.data.percentage {
+  font-size: 1.3em;
+}
+.reportBox ul .subtle {
+  color: #999999;
+}
+
+/*# sourceMappingURL=home.css.map */
