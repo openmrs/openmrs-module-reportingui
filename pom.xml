@@ -184,17 +184,6 @@
                     </configuration>
                 </plugin>
                 <plugin>
-                    <groupId>org.jasig.maven</groupId>
-                    <artifactId>sass-maven-plugin</artifactId>
-                    <version>1.1.1</version>
-                    <configuration>
-                        <sassSourceDirectory>${basedir}/src/main/webapp</sassSourceDirectory>
-                        <outputDirectory>${basedir}/src/main/webapp/resources/styles</outputDirectory>
-                        <baseOutputDirectory>${basedir}/src/main/webapp/resources/styles</baseOutputDirectory>
-                        <skin>scss</skin>
-                    </configuration>
-                </plugin>
-                <plugin>
                     <groupId>de.saumya.mojo</groupId>
                     <artifactId>gem-maven-plugin</artifactId>
                     <version>1.0.0-rc4</version>
@@ -226,38 +215,6 @@
 						</dependency>
 					</dependencies>
 				</plugin>
-                <plugin>
-                    <groupId>com.github.eirslett</groupId>
-                    <artifactId>frontend-maven-plugin</artifactId>
-                    <version>1.11.3</version>
-                    <configuration>
-                        <nodeVersion>v14.17.0</nodeVersion>
-                        <npmVersion>7.6.2</npmVersion>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>install node and npm</id>
-                            <goals>
-                                <goal>install-node-and-npm</goal>
-                            </goals>
-                        </execution>
-                        <execution>
-                            <id>npm install</id>
-                            <goals>
-                                <goal>npm</goal>
-                            </goals>
-                        </execution>
-                        <execution>
-                            <id>npm run build</id>
-                            <goals>
-                                <goal>npm</goal>
-                            </goals>
-                            <configuration>
-                                <arguments>run build</arguments>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
             </plugins>
         </pluginManagement>
     </build>
