@@ -39,7 +39,8 @@ runReportApp.controller('RunReportController', ['$scope', '$http', '$window', '$
                 $scope.completed = [];
             });
 
-        if(fetchReturnURL()){
+        jQuery("#returnButton").hide();
+        if (fetchReturnURL()) {
             jQuery("#returnButton").show();
         }
     }
