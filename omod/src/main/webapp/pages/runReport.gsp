@@ -174,20 +174,22 @@ ${ ui.includeFragment("appui", "messages", [ codes: [
             <legend>${ ui.message("reportingui.runReport.run.legend") }</legend>
 
             <form method="post" ng-submit="runReport()" id="run-report">
-                <% reportDefinition.parameters.each { %>
+                <% reportDefinition.parameters.each {
+                    def paramLabel = ui.message(it.labelOrName);
+                %>
                 <p>
                     <% if (it.collectionType) { %>
                         Parameters of type = collection are not yet implemented
                     <% } else if (it?.widgetConfiguration?.uiframeworkFragmentProvider) { %>
                         ${ ui.includeFragment(it.widgetConfiguration.uiframeworkFragmentProvider, it.widgetConfiguration.uiframeworkFragment, [
                                 formFieldName: "parameterValues[" + it.name + "]",
-                                label: it.labelOrName,
+                                label: paramLabel,
                                 classes: [(it.required == true ? "required" : '')]
                         ])}
                     <% } else if (it.type == java.util.Date) { %>
                         ${ ui.includeFragment("uicommons", "field/datetimepicker", [
                                 formFieldName: "parameterValues[" + it.name + "]",
-                                label: it.labelOrName,
+                                label: paramLabel,
                                 useTime: false,
                                 defaultDate: it.defaultValue,
                                 classes: [(it.required == true ? "required" : '')]
@@ -195,21 +197,21 @@ ${ ui.includeFragment("appui", "messages", [ codes: [
                     <% } else if (it.type == org.openmrs.Location) { %>
                         ${ ui.includeFragment("uicommons", "field/location", [
                                 formFieldName: "parameterValues[" + it.name + "]",
-                                label: it.labelOrName,
+                                label: paramLabel,
                                 initialValue: it.defaultValue ?: sessionContext.sessionLocation,
                                 classes: ["drop-down-list " + (it.required == true ? "required" : '')]
                         ])}
                     <% } else if (it.type == org.openmrs.EncounterType) { %>
                         ${ ui.includeFragment("uicommons", "field/encounterType", [
                                 formFieldName: "parameterValues[" + it.name + "]",
-                                label: it.labelOrName,
+                                label: paramLabel,
                                 initialValue: it.defaultValue,
                                 classes: ["drop-down-list " + (it.required == true ? "required" : '')]
                         ])}
                     <% } else if (it.type == java.lang.String && it.name.equalsIgnoreCase("Quarter")) { %>
                         ${ ui.includeFragment("uicommons", "field/dropDown", [
                                 formFieldName: "parameterValues[" + it.name + "]",
-                                label: it.labelOrName,
+                                label: paramLabel,
                                 options: quartersOptions,
                                 hideEmptyLabel: true,
                                 initialValue: it.defaultValue,
@@ -218,16 +220,16 @@ ${ ui.includeFragment("appui", "messages", [ codes: [
                     <% } else if (it.type == java.lang.String && it.name.equalsIgnoreCase("Locale")) { %>
                         ${ ui.includeFragment("uicommons", "field/dropDown", [
                                 formFieldName: "parameterValues[" + it.name + "]",
-                                label: it.labelOrName,
+                                label: paramLabel,
                                 options: localeOptions,
                                 hideEmptyLabel: true,
                                 initialValue: it.defaultValue,
                                 classes: ["drop-down-list " + (it.required == true ? "required" : '')]
                         ])}
-                    <% } else if (it.type == java.lang.String) { %>
+                    <% } else if (it.type == java.lang.String || it.type == java.lang.Integer) { %>
                         ${ ui.includeFragment("uicommons", "field/text", [
                                 formFieldName: "parameterValues[" + it.name + "]",
-                                label: it.labelOrName,
+                                label: paramLabel,
                                 classes: ["drop-down-list " + (it.required == true ? "required" : '')]
                         ])}
                     <% } else { %>
