@@ -83,11 +83,12 @@ ${ ui.includeFragment("appui", "messages", [ codes: [
                                 {{request.evaluateCompleteDatetime}}
                             </span>
                         </td>
-                        <td>
-                            <span ng-repeat="param in request.reportDefinition.mappings">
+                        <% reportDefinition.parameters.each { %>
+                            ${ ui.message(it.labelOrName) }:
+                            <span ng-repeat="param in request.reportDefinition.mappings" ng-show="param.name = '${it.name}'">
                                 {{ param.value }} <br/>
                             </span>
-                        </td>
+                        <% } %>
                         <td>
                             {{request.requestedBy}} <br/>
                             {{request.requestDate}}
@@ -131,9 +132,12 @@ ${ ui.includeFragment("appui", "messages", [ codes: [
                             {{request.evaluateCompleteDatetime}}
                         </td>
                         <td>
-                            <span ng-repeat="param in request.reportDefinition.mappings">
-                                {{ param.value }} <br/>
-                            </span>
+                            <% reportDefinition.parameters.each { %>
+                                ${ ui.message(it.labelOrName) }:
+                                <span ng-repeat="param in request.reportDefinition.mappings" ng-show="param.name = '${it.name}'">
+                                    {{ param.value }} <br/>
+                                </span>
+                            <% } %>
                         </td>
                         <td>
                             {{request.requestedBy}} <br/>

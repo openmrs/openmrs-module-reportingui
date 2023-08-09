@@ -69,13 +69,16 @@ public class RunReportPageController {
             } else {
                 converted = ui.convert(submitted, parameter.getType());
             }
-            if (converted == null) {
+            if (converted == null && parameter.isRequired()) {
                 missingParameters.add(parameter);
             }
-            parameterValues.put(parameter.getName(), converted);
+            if (converted != null) {
+                parameterValues.put(parameter.getName(), converted);
+            }
         }
-        if (missingParameters.size() > 0) {
+        if (!missingParameters.isEmpty()) {
             request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR, ui.message("reportingui.runReport.missingParameter"));
+            request.getSession().setAttribute("emr.errorMessage", ui.message("reportingui.runReport.missingParameter")); // uicommons
             return "redirect:" + ui.pageLink("reportingui", "runReport", SimpleObject.create("reportDefinition", reportDefinition.getUuid()));
         }
 
