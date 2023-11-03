@@ -232,6 +232,26 @@ ${ ui.includeFragment("appui", "messages", [ codes: [
                                 initialValue: it.defaultValue,
                                 classes: ["drop-down-list " + (it.required == true ? "required" : '')]
                         ])}
+                    <% } else if (it.type == java.lang.String && it?.widgetConfiguration?.optionValues) { %>
+                    <%
+                            def options = []
+                            it.widgetConfiguration.optionValues.split(",").eachWithIndex { optionValue, index ->
+                                options[index] = [label: optionValue, value: optionValue, selected: false]
+                            }
+                            if (it?.widgetConfiguration?.optionLabels) {
+                                it.widgetConfiguration.optionLabels.split(",").eachWithIndex { optionLabel, index ->
+                                    options[index].label = ui.message(optionLabel)
+                                }
+                            }
+                    %>
+                    ${ ui.includeFragment("uicommons", "field/dropDown", [
+                            formFieldName: "parameterValues[" + it.name + "]",
+                            label: paramLabel,
+                            options: options,
+                            hideEmptyLabel: true,
+                            initialValue: it.defaultValue,
+                            classes: ["drop-down-list " + (it.required == true ? "required" : '')]
+                    ])}
                     <% } else if (it.type == java.lang.String || it.type == java.lang.Integer) { %>
                         ${ ui.includeFragment("uicommons", "field/text", [
                                 formFieldName: "parameterValues[" + it.name + "]",
