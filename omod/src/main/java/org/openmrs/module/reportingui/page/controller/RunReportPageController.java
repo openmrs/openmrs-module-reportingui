@@ -1,6 +1,7 @@
 package org.openmrs.module.reportingui.page.controller;
 
 import org.apache.commons.lang3.StringUtils;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.reporting.evaluation.parameter.Mapped;
 import org.openmrs.module.reporting.evaluation.parameter.Parameter;
 import org.openmrs.module.reporting.report.ReportRequest;
@@ -16,10 +17,8 @@ import org.openmrs.ui.framework.page.PageModel;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.time.ZonedDateTime;
+import java.util.*;
 
 /**
  *
@@ -58,6 +57,7 @@ public class RunReportPageController {
 
         Collection<Parameter> missingParameters = new ArrayList<Parameter>();
         Map<String, Object> parameterValues = new HashMap<String, Object>();
+        parameterValues.put("timezoneOffset", getClientTimezoneOffset());
         for (Parameter parameter : reportDefinition.getParameters()) {
             String submitted = request.getParameter("parameterValues[" + parameter.getName() + "]");
             if (parameter.getCollectionType() != null) {
@@ -96,4 +96,13 @@ public class RunReportPageController {
         return "redirect:" + ui.pageLink("reportingui", "runReport", SimpleObject.create("reportDefinition", reportDefinition.getUuid()));
     }
 
+    private String getClientTimezoneOffset() {
+        String clientTimezone = Context.getAuthenticatedUser().getUserProperty("clientTimezone");
+        if (clientTimezone.isEmpty()) {
+            clientTimezone = TimeZone.getDefault().getID();
+        }
+        return ZonedDateTime.now(TimeZone.getTimeZone(clientTimezone).toZoneId())
+                .getOffset()
+                .getId();
+    }
 }
