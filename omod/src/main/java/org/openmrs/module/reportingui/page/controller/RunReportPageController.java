@@ -62,7 +62,6 @@ public class RunReportPageController {
 
         Collection<Parameter> missingParameters = new ArrayList<Parameter>();
         Map<String, Object> parameterValues = new HashMap<String, Object>();
-        parameterValues.put("timezoneOffset", getClientTimezoneOffset());
         for (Parameter parameter : reportDefinition.getParameters()) {
             String submitted = request.getParameter("parameterValues[" + parameter.getName() + "]");
             if (parameter.getCollectionType() != null) {
@@ -86,6 +85,8 @@ public class RunReportPageController {
             request.getSession().setAttribute("emr.errorMessage", ui.message("reportingui.runReport.missingParameter")); // uicommons
             return "redirect:" + ui.pageLink("reportingui", "runReport", SimpleObject.create("reportDefinition", reportDefinition.getUuid()));
         }
+        parameterValues.put("timezoneOffset", getClientTimezoneOffset());
+        reportDefinition.addParameter(new Parameter("timezoneOffset", "timezoneOffset", String.class));;
 
         ReportRequest reportRequest = new ReportRequest();
         reportRequest.setReportDefinition(new Mapped<ReportDefinition>(reportDefinition, parameterValues));
