@@ -17,13 +17,18 @@ import org.openmrs.ui.framework.page.PageModel;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.ZonedDateTime;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
  *
  */
 public class RunReportPageController {
+
+    private static DateTimeFormatter offsetFormatter = DateTimeFormatter.ofPattern("xxx");
 
     public void get(@SpringBean ReportDefinitionService reportDefinitionService,
                     @SpringBean ReportService reportService,
@@ -101,8 +106,8 @@ public class RunReportPageController {
         if (clientTimezone.isEmpty()) {
             clientTimezone = TimeZone.getDefault().getID();
         }
-        return ZonedDateTime.now(TimeZone.getTimeZone(clientTimezone).toZoneId())
-                .getOffset()
-                .getId();
+        ZoneId zoneId = TimeZone.getTimeZone(clientTimezone).toZoneId();
+        ZoneOffset zoneOffset = zoneId.getRules().getOffset(Instant.now());
+        return offsetFormatter.format(zoneOffset);
     }
 }
