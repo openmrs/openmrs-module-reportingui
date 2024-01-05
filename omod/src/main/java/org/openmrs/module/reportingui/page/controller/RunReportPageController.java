@@ -98,7 +98,7 @@ public class RunReportPageController {
 
     private String getClientTimezoneOffset() {
         String clientTimezone = Context.getAuthenticatedUser().getUserProperty("clientTimezone");
-        if (clientTimezone.isEmpty()) {
+        if (clientTimezone == null || clientTimezone.isEmpty()) {
             clientTimezone = TimeZone.getDefault().getID();
         }
         return ZonedDateTime.now(TimeZone.getTimeZone(clientTimezone).toZoneId())
