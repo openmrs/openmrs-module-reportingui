@@ -256,6 +256,7 @@ ${ ui.includeFragment("appui", "messages", [ codes: [
                         ${ ui.includeFragment("uicommons", "field/text", [
                                 formFieldName: "parameterValues[" + it.name + "]",
                                 label: paramLabel,
+                                initialValue: it.defaultValue,
                                 classes: ["drop-down-list " + (it.required == true ? "required" : '')]
                         ])}
                     <% } else { %>
