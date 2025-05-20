@@ -31,9 +31,11 @@ import org.openmrs.ui.framework.fragment.action.SuccessResult;
 import org.openmrs.util.OpenmrsUtil;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -198,10 +200,15 @@ public class ReportStatusFragmentController {
     public class ParamValue {
         private String name;
         private String value;
+        private String dateValue;
 
-        public ParamValue(String name, String value) {
+        public ParamValue(UiUtils ui, String name, Object value) {
             this.name = name;
-            this.value = value;
+            this.value = ui.format(value);
+            if (value instanceof Date) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                dateValue = sdf.format((Date) value);
+            }
         }
 
         public String getName() {
@@ -210,6 +217,10 @@ public class ReportStatusFragmentController {
 
         public String getValue() {
             return value;
+        }
+
+        public String getDateValue() {
+            return dateValue;
         }
     }
 
@@ -220,7 +231,7 @@ public class ReportStatusFragmentController {
 
         List<ParamValue> parameterMappings = new ArrayList<ParamValue>();
         for (Map.Entry<String, Object> entry : mapped.getParameterMappings().entrySet()) {
-            parameterMappings.add(new ParamValue(entry.getKey(), ui.format(entry.getValue())));
+            parameterMappings.add(new ParamValue(ui, entry.getKey(), entry.getValue()));
         }
 
         SimpleObject simple = new SimpleObject();
