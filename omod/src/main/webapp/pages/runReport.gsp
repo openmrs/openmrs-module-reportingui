@@ -165,7 +165,7 @@ ${ ui.includeFragment("appui", "messages", [ codes: [
                                 <br/>
                                 <a ng-hide="request.renderingMode.interactive" ng-click="reRunRequest(request)">
                                     <i class="icon-play small"></i>
-                                    Run Again
+                                    ${ ui.message("reportingui.reportRequest.runAgain.action") }
                                 </a>
                             </span>
                         </td>
