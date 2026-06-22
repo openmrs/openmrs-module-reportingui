@@ -205,6 +205,7 @@ ${ ui.includeFragment("appui", "messages", [ codes: [
                                 formFieldName: "parameterValues[" + it.name + "]",
                                 label: paramLabel,
                                 initialValue: it.defaultValue ?: sessionContext.sessionLocation,
+                                withTag: it?.widgetConfiguration?.withTag,
                                 classes: ["drop-down-list " + (it.required == true ? "required" : '')]
                         ])}
                     <% } else if (it.type == org.openmrs.EncounterType) { %>
